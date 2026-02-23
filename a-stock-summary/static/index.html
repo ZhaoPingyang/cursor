@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A股当日市场摘要</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>A股当日市场摘要</h1>
+      <div class="meta">
+        <span id="date"></span>
+        <span id="time"></span>
+        <button type="button" class="btn-refresh" id="btnRefresh" title="刷新">↻ 刷新</button>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>主要指数</h2>
+      <div class="index-grid" id="indexGrid">
+        <div class="loading">加载中…</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>两市概览</h2>
+      <div class="market-overview" id="marketOverview">
+        <div class="loading">加载中…</div>
+      </div>
+    </section>
+
+    <section class="section two-cols">
+      <div class="panel">
+        <h2>涨幅榜</h2>
+        <div class="table-wrap" id="hotTable">
+          <div class="loading">加载中…</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>跌幅榜</h2>
+        <div class="table-wrap" id="fallTable">
+          <div class="loading">加载中…</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      数据来源于公开接口，仅供参考，不构成投资建议。
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
