@@ -59,15 +59,34 @@ def fetch_a_share_list() -> List[Dict[str, Any]]:
     data = _em_get(url, params)
     diff = (data.get("data") or {}).get("diff") or []
     out: List[Dict[str, Any]] = []
+
+    def _detect_market_from_code(code: str) -> str:
+        """
+        根据股票代码简单区分沪/深：
+          - 沪市常见：600/601/603/605/688/689/900 开头
+          - 深市常见：000/001/002/003/300/301 开头
+          其余标记为 OTHER
+        """
+        if not code:
+            return "OTHER"
+        prefix3 = code[:3]
+        if prefix3 in {"600", "601", "603", "605", "688", "689", "900"}:
+            return "SH"
+        if prefix3 in {"000", "001", "002", "003", "300", "301"}:
+            return "SZ"
+        return "OTHER"
+
     for item in diff:
+        code = item.get("f12") or ""
         out.append(
             {
-                "code": item.get("f12"),        # 股票代码
-                "name": item.get("f14"),        # 名称
-                "price": item.get("f2"),        # 最新价
-                "pct_change": item.get("f3"),   # 涨跌幅
-                "change": item.get("f4"),       # 涨跌额
-                "amount": item.get("f6"),       # 成交额(元)
+                "code": code,                     # 股票代码
+                "name": item.get("f14"),          # 名称
+                "price": item.get("f2"),          # 最新价
+                "pct_change": item.get("f3"),     # 涨跌幅
+                "change": item.get("f4"),         # 涨跌额
+                "amount": item.get("f6"),         # 成交额(元)
+                "market": _detect_market_from_code(code),  # 市场：SH / SZ / OTHER
             }
         )
     return out
@@ -182,6 +201,7 @@ def get_hot_stocks(asc=False, top=10):
                 "price": float(item.get("price") or 0),
                 "pct_change": float(item.get("pct_change") or 0),
                 "amount": float(item.get("amount") or 0),
+                "market": str(item.get("market") or ""),
             }
             for item in top_list
         ]

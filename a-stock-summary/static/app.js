@@ -1,6 +1,16 @@
 (function () {
   const API_BASE = "";
 
+  // 简单的会话内时序数据，用于折线图
+  let indexChart = null;
+  let marketChart = null;
+  const timeLabels = [];
+  const shSeries = [];
+  const szSeries = [];
+  const upSeries = [];
+  const downSeries = [];
+  const MAX_POINTS = 60; // 最多保留 60 个点
+
   function el(id) {
     return document.getElementById(id);
   }
@@ -89,6 +99,110 @@
     `;
   }
 
+  function updateCharts(summaryData) {
+    if (!summaryData) return;
+
+    const timeLabel = summaryData.time || "";
+    const indices = summaryData.indices || [];
+    const market = summaryData.market || {};
+
+    // 选取上证指数和深证成指
+    const sh = indices.find((i) => (i.name || "").includes("上证指数"));
+    const sz = indices.find((i) => (i.name || "").includes("深证成指"));
+
+    timeLabels.push(timeLabel);
+    shSeries.push(sh ? Number(sh.price) || 0 : 0);
+    szSeries.push(sz ? Number(sz.price) || 0 : 0);
+    upSeries.push(market.up != null ? Number(market.up) : 0);
+    downSeries.push(market.down != null ? Number(market.down) : 0);
+
+    // 控制数组长度
+    const trimTo = (arr) => {
+      while (arr.length > MAX_POINTS) arr.shift();
+    };
+    trimTo(timeLabels);
+    [shSeries, szSeries, upSeries, downSeries].forEach(trimTo);
+
+    const commonOptions = {
+      responsive: true,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: true },
+        tooltip: { enabled: true },
+      },
+      scales: {
+        x: {
+          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+        },
+      },
+    };
+
+    const indexCtx = document.getElementById("indexChart").getContext("2d");
+    const marketCtx = document.getElementById("marketChart").getContext("2d");
+
+    if (!indexChart) {
+      indexChart = new Chart(indexCtx, {
+        type: "line",
+        data: {
+          labels: timeLabels,
+          datasets: [
+            {
+              label: "上证指数",
+              data: shSeries,
+              borderColor: "#d81e06",
+              backgroundColor: "rgba(216,30,6,0.1)",
+              tension: 0.2,
+            },
+            {
+              label: "深证成指",
+              data: szSeries,
+              borderColor: "#0052d9",
+              backgroundColor: "rgba(0,82,217,0.1)",
+              tension: 0.2,
+            },
+          ],
+        },
+        options: commonOptions,
+      });
+    } else {
+      indexChart.data.labels = [...timeLabels];
+      indexChart.data.datasets[0].data = [...shSeries];
+      indexChart.data.datasets[1].data = [...szSeries];
+      indexChart.update();
+    }
+
+    if (!marketChart) {
+      marketChart = new Chart(marketCtx, {
+        type: "line",
+        data: {
+          labels: timeLabels,
+          datasets: [
+            {
+              label: "上涨家数",
+              data: upSeries,
+              borderColor: "#f44336",
+              backgroundColor: "rgba(244,67,54,0.1)",
+              tension: 0.2,
+            },
+            {
+              label: "下跌家数",
+              data: downSeries,
+              borderColor: "#009688",
+              backgroundColor: "rgba(0,150,136,0.1)",
+              tension: 0.2,
+            },
+          ],
+        },
+        options: commonOptions,
+      });
+    } else {
+      marketChart.data.labels = [...timeLabels];
+      marketChart.data.datasets[0].data = [...upSeries];
+      marketChart.data.datasets[1].data = [...downSeries];
+      marketChart.update();
+    }
+  }
+
   function renderTable(containerId, list) {
     const container = el(containerId);
     if (!list || list.length === 0) {
@@ -100,6 +214,7 @@
         <thead>
           <tr>
             <th>代码</th>
+            <th>市场</th>
             <th>名称</th>
             <th>最新价</th>
             <th>涨跌幅</th>
@@ -112,6 +227,7 @@
               (row) => `
             <tr>
               <td>${row.code || ""}</td>
+              <td>${row.market === "SH" ? "沪" : row.market === "SZ" ? "深" : (row.market || "")}</td>
               <td>${row.name || ""}</td>
               <td>${formatNum(row.price)}</td>
               <td class="pct-cell ${pctClass(row.pct_change)}">${formatPct(row.pct_change)}</td>
@@ -133,6 +249,7 @@
       el("time").textContent = data.time || "";
       renderIndices(data.indices || []);
       renderMarket(data.market || {});
+      updateCharts(data);
     } catch (e) {
       renderIndices({ error: "网络错误" });
       renderMarket({ error: "网络错误" });
