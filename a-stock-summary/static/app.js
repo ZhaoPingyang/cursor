@@ -15,6 +15,8 @@
     return document.getElementById(id);
   }
 
+  
+
   function formatNum(n) {
     if (n == null || Number.isNaN(n)) return "—";
     return Number(n).toLocaleString("zh-CN", { maximumFractionDigits: 2 });
