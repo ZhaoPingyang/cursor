@@ -1,3 +1,16 @@
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --surface2: #243044;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
+  --border: #30363d;
+  --radius: 16px;
+  --font: "Noto Sans SC", -apple-system, system-ui, sans-serif;
+}
+
 *,
 *::before,
 *::after {
@@ -8,9 +21,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, -sans-serif;
-  background: radial-gradient(circle at top left, #13293d, #050816);
-  color: #f5f7fb;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
 }
 
@@ -23,7 +36,7 @@ body {
 .app {
   max-width: 1200px;
   width: 100%;
-  padding: 24px 16px 40px;
+  padding: 28px 18px 36px;
 }
 
 .app-header {
@@ -32,18 +45,20 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .app-header h1 {
   margin: 0 0 4px;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .subtitle {
   margin: 0;
   font-size: 13px;
-  color: #c0c4d6;
+  color: var(--text-muted);
 }
 
 .api-key-panel {
@@ -55,33 +70,33 @@ body {
 
 .api-key-panel label {
   font-size: 13px;
-  color: #d4d8e8;
+  color: var(--text-muted);
 }
 
 .api-key-panel input {
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(6, 13, 30, 0.85);
-  color: #f5f7fb;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   min-width: 230px;
   outline: none;
 }
 
 .api-key-panel input::placeholder {
-  color: #7f8499;
+  color: var(--text-muted);
 }
 
 .api-key-panel button {
   padding: 6px 14px;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, #facc15, #f97316);
-  color: #111827;
+  background: var(--surface2);
+  color: var(--text);
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
-  box-shadow: 0 6px 18px rgba(250, 204, 21, 0.4);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
 .api-key-panel button:hover {
@@ -101,9 +116,10 @@ body {
   gap: 12px 20px;
   padding: 12px 16px;
   border-radius: 16px;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--surface);
   backdrop-filter: blur(12px);
   margin-bottom: 18px;
+  border: 1px solid var(--border);
 }
 
 .control-group {
@@ -114,16 +130,16 @@ body {
 
 .control-group label {
   font-size: 13px;
-  color: #d4d8e8;
+  color: var(--text-muted);
 }
 
 .control-group select,
 .control-group input {
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
   font-size: 13px;
   outline: none;
 }
@@ -135,32 +151,55 @@ body {
   align-items: center;
   gap: 12px;
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .status-group span#statusText {
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(15, 118, 110, 0.2);
-  color: #6ee7b7;
+  background: rgba(63, 185, 80, 0.18);
+  color: var(--green);
 }
 
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .metal-card {
-  background: radial-gradient(circle at top left, rgba(55, 65, 81, 0.6), rgba(15, 23, 42, 0.95));
-  border-radius: 18px;
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius);
   padding: 16px 16px 14px;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.metal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at top right, rgba(63, 185, 80, 0.24), transparent 55%);
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.metal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.95);
+  border-color: var(--green);
+}
+
+.metal-card:hover::before {
+  opacity: 1;
 }
 
 .metal-card header {
@@ -179,9 +218,9 @@ body {
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(156, 163, 175, 0.8);
-  color: #e5e7eb;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
 }
 
 .price-row {
@@ -189,6 +228,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  margin-top: 2px;
 }
 
 .price-main {
@@ -199,48 +239,48 @@ body {
 
 .price-label {
   font-size: 12px;
-  color: #d1d5db;
+  color: var(--text-muted);
 }
 
 .price-value {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
 }
 
 .price-currency {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .price-change {
   font-size: 12px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(31, 41, 55, 0.9);
+  background: var(--surface2);
   min-width: 90px;
   text-align: right;
 }
 
 .price-change.positive {
-  color: #4ade80;
-  background: rgba(21, 128, 61, 0.25);
+  color: var(--green);
+  background: rgba(63, 185, 80, 0.2);
 }
 
 .price-change.negative {
-  color: #fb7185;
-  background: rgba(190, 24, 93, 0.25);
+  color: var(--red);
+  background: rgba(248, 81, 73, 0.2);
 }
 
 .price-change.neutral {
-  color: #e5e7eb;
-  background: rgba(31, 41, 55, 0.9);
+  color: var(--text-muted);
+  background: var(--surface2);
 }
 
 .market-table-wrapper {
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(55, 65, 81, 0.9);
+  background: var(--surface2);
+  border: 1px solid var(--border);
 }
 
 .market-table-wrapper table {
@@ -255,58 +295,20 @@ body {
 }
 
 .market-table-wrapper thead {
-  background: rgba(31, 41, 55, 0.95);
+  background: var(--surface);
 }
 
 .market-table-wrapper tbody tr:nth-child(odd) {
-  background: rgba(15, 23, 42, 0.95);
+  background: var(--surface2);
 }
 
 .market-table-wrapper tbody tr:nth-child(even) {
-  background: rgba(17, 24, 39, 0.95);
+  background: var(--surface);
 }
 
 .market-table-wrapper tbody tr td:last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
-
-.raw-data {
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 16px;
-  padding: 12px 14px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-}
-
-.raw-data header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.raw-data h3 {
-  margin: 0 0 4px;
-  font-size: 14px;
-}
-
-.raw-data p {
-  margin: 0;
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-.raw-data pre {
-  margin: 10px 0 0;
-  max-height: 260px;
-  overflow: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
-  font-size: 11px;
-  background: rgba(15, 23, 42, 0.95);
-  padding: 8px 10px;
-  border-radius: 10px;
-  color: #e5e7eb;
 }
 
 @media (max-width: 768px) {
@@ -320,6 +322,14 @@ body {
 
   .status-group {
     margin-left: 0;
+  }
+
+  .price-row {
+    align-items: flex-start;
+  }
+
+  .price-change {
+    align-self: flex-start;
   }
 }
 

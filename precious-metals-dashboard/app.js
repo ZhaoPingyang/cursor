@@ -21,8 +21,6 @@ const dom = {
   silverChange: document.getElementById("silverChange"),
   silverLbma: document.getElementById("silverLbma"),
   silverMcx: document.getElementById("silverMcx"),
-
-  rawJson: document.getElementById("rawJson"),
 };
 
 let timerId = null;
@@ -97,7 +95,6 @@ async function fetchLatest() {
     });
 
     const data = await res.json();
-    dom.rawJson.textContent = JSON.stringify(data, null, 2);
 
     if (!res.ok || data.status !== "success") {
       const msg = data.error_message || `请求失败，HTTP ${res.status}`;
