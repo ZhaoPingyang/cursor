@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>贵金属实时行情看板 - 黄金 / 白银</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div>
+          <h1>贵金属实时行情看板</h1>
+          <p class="subtitle">实时查看黄金 / 白银价格变化及交易相关数据（基于 Metals.Dev API）</p>
+        </div>
+        <div class="api-key-panel">
+          <label for="apiKey">Metals.Dev API Key：</label>
+          <input id="apiKey" type="password" placeholder="在此粘贴你的 API Key" />
+          <button id="startButton">开始实时获取</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="controls">
+          <div class="control-group">
+            <label for="currency">计价货币：</label>
+            <select id="currency">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="CNY">CNY</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="refreshInterval">刷新间隔（秒）：</label>
+            <input id="refreshInterval" type="number" min="3" max="300" step="1" value="10" />
+          </div>
+          <div class="status-group">
+            <span id="statusText">等待开始...</span>
+            <span id="lastUpdated"></span>
+          </div>
+        </section>
+
+        <section class="cards">
+          <article class="metal-card" id="goldCard">
+            <header>
+              <h2>黄金 (Gold)</h2>
+              <span class="badge">toz</span>
+            </header>
+            <div class="price-row">
+              <div class="price-main">
+                <span class="price-label">当前价</span>
+                <span class="price-value" id="goldPrice">--</span>
+                <span class="price-currency" id="goldCurrency">USD</span>
+              </div>
+              <div class="price-change" id="goldChange">--</div>
+            </div>
+            <div class="market-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>市场 / 指标</th>
+                    <th>价格</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>LBMA AM</td>
+                    <td id="goldLbmaAm">--</td>
+                  </tr>
+                  <tr>
+                    <td>LBMA PM</td>
+                    <td id="goldLbmaPm">--</td>
+                  </tr>
+                  <tr>
+                    <td>MCX</td>
+                    <td id="goldMcx">--</td>
+                  </tr>
+                  <tr>
+                    <td>IBJA</td>
+                    <td id="goldIbja">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="metal-card" id="silverCard">
+            <header>
+              <h2>白银 (Silver)</h2>
+              <span class="badge">toz</span>
+            </header>
+            <div class="price-row">
+              <div class="price-main">
+                <span class="price-label">当前价</span>
+                <span class="price-value" id="silverPrice">--</span>
+                <span class="price-currency" id="silverCurrency">USD</span>
+              </div>
+              <div class="price-change" id="silverChange">--</div>
+            </div>
+            <div class="market-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>市场 / 指标</th>
+                    <th>价格</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>LBMA</td>
+                    <td id="silverLbma">--</td>
+                  </tr>
+                  <tr>
+                    <td>MCX</td>
+                    <td id="silverMcx">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="raw-data">
+          <header>
+            <h3>原始行情 / 交易数据</h3>
+            <p>方便你自行调试、校验或二次开发。</p>
+          </header>
+          <pre id="rawJson">尚未请求数据。</pre>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+  </html>
+
